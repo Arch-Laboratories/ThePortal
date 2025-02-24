@@ -1,3 +1,35 @@
+/* Preloader overlay covers entire viewport */
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999; /* Ensure it’s on top of everything else */
+  width: 100%;
+  height: 100%;
+  background: #000; /* Dark background or adjust to your preference */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo spinner (fade in/out animation) */
+#preloader-logo {
+  width: 120px;        /* Adjust size of the logo spinner */
+  height: auto;        /* Keep aspect ratio */
+  animation: fadeInOut 2s infinite; /* 2s cycle, repeats infinitely */
+}
+
+/* Keyframes for fading in/out */
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+
 @font-face {
   font-family: 'CustomFontOne';
   src: url('fonts/Exo2-ExtraBold.otf') format('opentype');

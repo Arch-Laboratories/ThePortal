@@ -1,3 +1,12 @@
+  // When the entire page (images, etc.) finishes loading
+  window.addEventListener('load', function() {
+    // Hide the preloader overlay
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.style.display = 'none';
+    }
+  });
+  
 /****************************************************
  * 1) Slides Data
  ****************************************************/
