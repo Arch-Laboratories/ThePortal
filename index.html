@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Page</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+  <video autoplay loop muted playsinline id="bg-video">
+    <source src="/images/BG_video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- STICKY NAVBAR -->
+  <header class="navbar" id="navbar">
+    <!-- Logo on the left -->
+    <div class="nav-logo">
+      <img src="images/logo.png" alt="Logo" />
+    </div>
+
+    <!-- Nav links (centered on large screens, side drawer on small) -->
+    <nav class="nav-links" id="navLinks">
+      <!-- <a href="#home" class="nav-link">Home</a> -->
+      <a href="#about-us" class="nav-link">About Us</a>
+      <a href="#portfolio" class="nav-link">Portfolio</a>
+      <a href="#contactUs" class="nav-link">Contact Us</a>
+    </nav>
+
+    <!-- Hamburger (shown on small screens only) -->
+    <div class="hamburger" id="hamburgerBtn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+
+  <div class="main-wrapper">
+    <section class="hero-section" id="home">
+      <h1>
+        WELCOME<br>TO THE<br>
+        <span class="portal-highlight">PORTAL</span>
+      </h1>
+    </section>
+    
+    <!-- ABOUT US  -->
+    <section id="about-us" class="about-section">
+      <div class="section-header">
+        <h2 class="section-heading">ABOUT US</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            At The Portal, we craft visually stunning and strategically designed brand identities that make businesses stand out.
+            <br>
+            <br>
+            With a passion for minimalism and innovation, 
+            we specialize in creating sleek, modern, and timeless 
+            designs that leave a lasting impact.
+            <br>
+            <br>
+            From logos and packaging to complete brand transformations, 
+            we merge creativity with precision to bring ideas to life. 
+            <br>
+            <br>
+            Whether you're a startup looking for a fresh identity or 
+            an established brand seeking a refined aesthetic, 
+            The Portal is your gateway to exceptional design.
+            <br>
+            <br>
+            Let’s build something remarkable together.
+          </p>
+        </div>
+      </div>
+    </section>
+    
+
+    <!-- 2D CAROUSEL SECTION -->
+    <section id="portfolio">
+
+      <div class="section-header">
+        <h2 class="section-heading">PROJECTS</h2>
+        <div class="section-divider"></div>
+      </div>
+
+      <div class="carousel-container">
+        <button id="prevBtn" class="nav-button">&#10094;</button>
+        <div id="horizontalCarousel" class="horizontal-carousel"></div>
+        <button id="nextBtn" class="nav-button">&#10095;</button>
+      </div>
+      <div id="verticalCarouselWrapper" class="vertical-carousel-wrapper hidden">
+        <div id="verticalCarousel" class="vertical-carousel"></div>
+      </div>
+    </section>
+
+        <!-- CONTACT US SECTION -->
+    <section class="contactus-section" id="contactUs">
+      <div class="contactus-container">
+        <!-- LEFT SIDE (text/info) -->
+        <div class="contactus-left">
+          <div class="contactus-left-inner">
+            <h2 class="contactus-title">Let's connect</h2>
+            <p class="contactus-description">
+              Let’s bring your vision to life.<br>The Portal is here to make it happen.
+            </p>
+            <div class="contactus-info">
+              <div class="contactus-info-item">
+                <img src="images/mail-icon.png" alt="Email Icon" class="contactus-icon">
+                <div>
+                  <p class="contactus-label">Email</p>
+                  <p>umair.taqui@gmail.com</p>
+                </div>
+              </div>
+              <div class="contactus-info-item">
+                <img src="images/call-icon.png" alt="Phone Icon" class="contactus-icon">
+                <div>
+                  <p class="contactus-label">Phone</p>
+                  <p>+966 53 818 4624</p>
+                </div>
+              </div>
+              <div class="contactus-info-item">
+                <img src="images/pin-icon.png" alt="Address Icon" class="contactus-icon">
+                <div>
+                  <p class="contactus-label">Address</p>
+                  <p>Jeddah, Saudi Arabia</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
+        <!-- RIGHT SIDE (form) -->
+        <div class="contactus-right">
+          <h2 class="contactus-title">Send us a message</h2>
+          <form class="contactus-form">
+            <div class="contactus-form-group">
+              <label for="contactusFirstName">First &amp; Last Name*</label>
+              <input
+                type="text"
+                id="contactusFirstName"
+                class="contactus-input"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+            <div class="contactus-form-group">
+              <label for="contactusPhone">Phone number*</label>
+              <input
+                type="tel"
+                id="contactusPhone"
+                class="contactus-input"
+                placeholder="(123) 456-7890"
+                required
+              />
+            </div>
+            <div class="contactus-form-group">
+              <label for="contactusEmail">Email address*</label>
+              <input
+                type="email"
+                id="contactusEmail"
+                class="contactus-input"
+                placeholder="example@domain.com"
+                required
+              />
+            </div>
+            <div class="contactus-form-group">
+              <label for="contactusCompany">Company name (optional)</label>
+              <input
+                type="text"
+                id="contactusCompany"
+                class="contactus-input"
+                placeholder="Your Company"
+              />
+            </div>
+            <div class="contactus-form-group">
+              <label for="contactusMessage">Message*</label>
+              <textarea
+                id="contactusMessage"
+                class="contactus-input"
+                placeholder="Your message here"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="contactus-button">Contact us now!</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+    <footer class="footer">
+      <p>&copy; The Portal 2021 -  All rights reserved</p>
+    </footer>
+  </div>
+
+  <nav class="scroll-dots">
+    <ul>
+      <li data-section="home" class="scroll-dot active"></li>
+      <li data-section="about-us" class="scroll-dot"></li>
+      <li data-section="portfolio" class="scroll-dot"></li>
+      <li data-section="contactUs" class="scroll-dot"></li>
+    </ul>
+  </nav>
+  
+  <!-- Link external script at bottom, so DOM is ready -->
+  <script src="script.js"></script>
+</body>
+</html>
