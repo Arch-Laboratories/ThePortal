@@ -314,6 +314,7 @@ body::before {
   display: flex;
   align-items: flex-end;
   pointer-events: none;
+  margin-left: 15px;
 }
 
 .hidden {
@@ -377,29 +378,55 @@ body::before {
 /********************************************
  * HOVER OVERLAY
  ********************************************/
+ @keyframes flashOverlay {
+  0%, 100% { opacity: 0; }
+  10%, 30% { opacity: 1; }
+  40%, 60% { opacity: 0; }
+  70%, 90% { opacity: 1; }
+}
+
+/* Updated overlay styles to center the icon and text */
 .slide-overlay {
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  /* Flex centering both horizontally and vertically */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  animation: flashOverlay 4s infinite;
+  animation-play-state: running;
+  animation-delay: 0s;
 }
+
+.no-overlay .slide-overlay {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+/* When the slide is hovered, pause the animation and keep the overlay visible */
 .slide:hover .slide-overlay {
+  animation-play-state: paused;
   opacity: 1;
 }
+
 .click-icon {
-  font-size: 2rem;
-  color: #fff;
+  display: inline-block;
+  width: 60px;     /* adjust size as needed */
+  height: 60px;    /* ensure a square shape */
+  background-image: url("images/TapIcon.png"); /* your custom icon */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   margin-bottom: 0.5rem;
-  animation: bounce 1.5s infinite;
+  /* Remove text content if not needed */
+  color: transparent; /* hides any text, if present */
 }
+
 @keyframes bounce {
   0% {
     transform: translateY(0);
@@ -411,11 +438,21 @@ body::before {
     transform: translateY(0);
   }
 }
+
+/* Ensure the overlay text is centered below the icon */
 .overlay-text {
   color: #fff;
   font-size: 1rem;
   text-align: center;
   font-weight: 600;
+  font-family: CustomFontTwo;
+}
+
+.slide-overlay img.click-icon {
+  width: 48px;     /* adjust size as needed */
+  height: 48px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
 }
 
 /********************************************
@@ -506,14 +543,6 @@ body::before {
 .nav-links.open {
   transform: translateX(0);
 }
-
-
-
-
-
-
-
-
 
 .overlay {
   background-image: linear-gradient(to right, rgba(90, 100, 232, 0.9), rgba(84, 96, 234, 0.9));
@@ -888,6 +917,9 @@ display: inline-block;
 @media (max-width: 520px) {
   .contactus-info {
     padding: 0rem;
+  }
+  .vertical-carousel-wrapper {
+    margin-left: 7px;
   }
 }
 

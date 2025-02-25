@@ -114,11 +114,12 @@ function createHorizontalSlides() {
 
     const iconSpan = document.createElement("span");
     iconSpan.classList.add("click-icon");
-    iconSpan.textContent = "↓";
+    overlayDiv.appendChild(iconSpan);
+
 
     const overlayText = document.createElement("div");
     overlayText.classList.add("overlay-text");
-    overlayText.textContent = "Click to view more";
+    overlayText.textContent = "Tap to view Project";
 
     overlayDiv.appendChild(iconSpan);
     overlayDiv.appendChild(overlayText);
@@ -388,4 +389,45 @@ document.getElementById('contactForm').addEventListener('submit', function(e) {
       console.error('Failed to send message:', error);
       alert('Failed to send message. Please try again later.');
     });
+});
+
+// Global variable to track if any slide is hovered
+let isAnySlideHovered = false;
+
+// Function to hide overlays on all slides
+function hideAllOverlays() {
+  document.querySelectorAll('.slide-overlay').forEach(overlay => {
+    overlay.style.animationPlayState = 'paused';
+    overlay.style.opacity = 0;
+    // Optionally, set display to "none" if needed:
+    // overlay.style.display = 'none';
+  });
+}
+
+// Function to show overlays on all slides (resuming animation)
+function showAllOverlays() {
+  document.querySelectorAll('.slide-overlay').forEach(overlay => {
+    // Optionally, remove any inline display property:
+    // overlay.style.display = '';
+    overlay.style.animationPlayState = 'running';
+    // The animation will then control opacity.
+  });
+}
+
+// When any horizontal slide is hovered, add a "no-overlay" class to body
+document.querySelectorAll('.slide').forEach(slide => {
+  slide.addEventListener('mouseenter', () => {
+    document.body.classList.add('no-overlay');
+  });
+  slide.addEventListener('mouseleave', () => {
+    // Use a short timeout so that if the user is moving between slides,
+    // the class isn’t removed immediately.
+    setTimeout(() => {
+      // Check if no slide is still hovered:
+      const anyHovered = Array.from(document.querySelectorAll('.slide')).some(s => s.matches(':hover'));
+      if (!anyHovered) {
+        document.body.classList.remove('no-overlay');
+      }
+    }, 50);
+  });
 });
