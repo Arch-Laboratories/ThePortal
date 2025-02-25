@@ -798,6 +798,7 @@ display: inline-block;
   justify-content: center; /* center horizontally */
   align-items: center;     /* center vertically */
   padding: 2rem;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .contactus-title {
@@ -866,6 +867,13 @@ display: inline-block;
   font-weight: 500;
   margin-bottom: 0.3rem;
   color: #2a82ff ;
+}
+
+/* Target only the contact form’s textarea */
+.contactus-textarea {
+  resize: none;         /* Prevent manual resizing */
+  overflow-y: auto;      /* Show vertical scrollbar when content is too high */
+  height: 120px;         /* Set a fixed height – adjust this value as needed */
 }
 
 .contactus-input {

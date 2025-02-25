@@ -431,3 +431,13 @@ document.querySelectorAll('.slide').forEach(slide => {
     }, 50);
   });
 });
+
+
+document.getElementById('contactusMessage').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    // Allow the Enter key to create a new line in the textarea.
+    // If any other code is preventing this, this listener will help stop that.
+    e.stopPropagation();
+    // We do not call e.preventDefault() here, so the default newline is allowed.
+  }
+});
