@@ -23,6 +23,18 @@ section {
   animation: fadeInOut 2s infinite; /* 2s cycle, repeats infinitely */
 }
 
+/* Hide scrollbar in Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar in IE, Edge and Firefox */
+html {
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+
 /* Keyframes for fading in/out */
 @keyframes fadeInOut {
   0%, 100% {
