@@ -82,6 +82,8 @@ const nextBtn = document.getElementById("nextBtn");
 const verticalCloseDelay = 300;    // ms to wait for the vertical carousel to close
 const horizontalCenterDelay = 500; // ms to wait for horizontal centering animation
 const verticalOpenDelay = 0;       // additional delay before opening new vertical carousel (optional)
+const navAdjustmentDelay = 500; // Delay for vertical adjustment (ms)
+
 
 let currentSlideIndex = null;
 
@@ -141,67 +143,70 @@ function createHorizontalSlides() {
 function openVerticalCarousel(slideIndex, clickedSlideDiv) {
   currentSlideIndex = slideIndex;
   
-  // Step 1: Close any open vertical carousel, then...
-  closeVerticalCarouselPromise().then(() => {
-    // Step 2: Smoothly center the clicked slide relative to the viewport
-    const slideWidth = clickedSlideDiv.offsetWidth;
-    const targetScrollLeft = clickedSlideDiv.offsetLeft - (window.innerWidth / 2 - slideWidth / 2);
-  
-    horizontalCarousel.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-    
-    // Wait for horizontal scrolling to complete (adjust timing as needed)
-    setTimeout(() => {
-      // Step 3: Populate and open the new vertical carousel
-      document.body.style.overflow = "hidden";
-  
-      // Clear old vertical slides
-      verticalCarousel.querySelectorAll(".vertical-slide").forEach(vs => vs.remove());
-  
-      // Populate new vertical slides for the selected horizontal slide
-      slidesData[slideIndex].verticalImages.forEach(imageUrl => {
-        const vs = document.createElement("div");
-        vs.classList.add("vertical-slide");
-  
-        const spinner = document.createElement("div");
-        spinner.classList.add("spinner");
-        vs.appendChild(spinner);
-  
-        const img = document.createElement("img");
-        img.src = imageUrl;
-        img.addEventListener("load", () => {
-          spinner.style.display = "none";
-          img.classList.add("loaded");
-        });
-  
-        vs.appendChild(img);
-        verticalCarousel.appendChild(vs);
-      });
-  
-      // Get the clicked slide's bounding rectangle for vertical positioning
-      const rect = clickedSlideDiv.getBoundingClientRect();
-      verticalCarouselWrapper.style.position = "fixed";
-      verticalCarouselWrapper.style.left = rect.left + "px";
-      verticalCarouselWrapper.style.width = rect.width + "px";
-      verticalCarouselWrapper.style.top = rect.top + "px";
-      verticalCarouselWrapper.style.height = `calc(100vh - ${rect.top}px)`;
-  
-      verticalCarouselWrapper.classList.remove("hidden");
-      verticalCarouselWrapper.style.display = "flex";
-  
-      // Reset vertical carousel animation if needed
-      verticalCarousel.style.transition = "none";
-      verticalCarousel.classList.remove("open");
-      verticalCarousel.getBoundingClientRect(); // Force reflow
-      verticalCarousel.style.transition = "";
-  
-      verticalCarouselWrapper.style.pointerEvents = "auto";
-  
-      // Optional additional delay before opening vertical carousel
+  // First, adjust vertical visibility of the clicked slide.
+  adjustSlideVisibility(clickedSlideDiv).then(() => {
+    // Now proceed with the rest of your function.
+    closeVerticalCarouselPromise().then(() => {
+      // Step 2: Smoothly center the clicked horizontal slide relative to the viewport.
+      const slideWidth = clickedSlideDiv.offsetWidth;
+      const targetScrollLeft = clickedSlideDiv.offsetLeft - (window.innerWidth / 2 - slideWidth / 2);
+      horizontalCarousel.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+      
+      // Wait for horizontal scrolling to finish
       setTimeout(() => {
-        verticalCarousel.classList.add("open");
-      }, verticalOpenDelay);
-  
-    }, horizontalCenterDelay);
+        // Step 3: Clear and populate the vertical carousel anew
+        document.body.style.overflow = "hidden"; // Lock body scrolling
+        verticalCarousel.innerHTML = ""; // Clear previous vertical slides
+        
+        slidesData[slideIndex].verticalImages.forEach(imageUrl => {
+          const vs = document.createElement("div");
+          vs.classList.add("vertical-slide");
+    
+          const spinner = document.createElement("div");
+          spinner.classList.add("spinner");
+          vs.appendChild(spinner);
+    
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.addEventListener("load", () => {
+            spinner.style.display = "none";
+            img.classList.add("loaded");
+          });
+    
+          vs.appendChild(img);
+          verticalCarousel.appendChild(vs);
+        });
+        
+        // Reset vertical carousel scroll position to top
+        verticalCarousel.scrollTop = 0;
+        verticalCarousel.scrollTo({ top: 0, left: 0 });
+        void verticalCarousel.offsetHeight; // Force reflow
+        
+        // Step 4: Position the vertical carousel wrapper based on the clicked slide's position
+        const rect = clickedSlideDiv.getBoundingClientRect();
+        verticalCarouselWrapper.style.position = "fixed";
+        verticalCarouselWrapper.style.left = rect.left + "px";
+        verticalCarouselWrapper.style.width = rect.width + "px";
+        verticalCarouselWrapper.style.top = rect.top + "px";
+        verticalCarouselWrapper.style.height = `calc(100vh - ${rect.top}px)`;
+        
+        verticalCarouselWrapper.classList.remove("hidden");
+        verticalCarouselWrapper.style.display = "flex";
+        verticalCarouselWrapper.style.pointerEvents = "auto";
+        
+        // Step 5: Finally, open the vertical carousel so it slides in.
+        // Ensure vertical scroll is at the top.
+        verticalCarousel.scrollTop = 0;
+        setTimeout(() => {
+          verticalCarousel.style.transition = "none";
+          verticalCarousel.classList.remove("open");
+          void verticalCarousel.offsetWidth; // Force reflow
+          verticalCarousel.style.transition = "";
+          verticalCarousel.classList.add("open");
+        }, verticalOpenDelay);
+        
+      }, horizontalCenterDelay);
+    });
   });
 }
 
@@ -342,3 +347,26 @@ const observer = new IntersectionObserver((entries) => {
 sections.forEach(section => {
   observer.observe(section);
 });
+
+function adjustSlideVisibility(clickedSlideDiv) {
+  const navHeight = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+  const rect = clickedSlideDiv.getBoundingClientRect();
+  let adjustment = 0;
+
+  // Check if the slide's top is above the navbar
+  if (rect.top < navHeight) {
+    adjustment = rect.top - navHeight;
+  } 
+  // Check if the slide's bottom is below the viewport
+  else if (rect.bottom > window.innerHeight) {
+    adjustment = rect.bottom - window.innerHeight;
+  }
+  
+  if (adjustment !== 0) {
+    window.scrollBy({ top: adjustment, behavior: 'smooth' });
+    // Return a Promise that resolves after a delay so that subsequent actions wait for the scroll to finish.
+    return new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay; adjust as needed.
+  } else {
+    return Promise.resolve();
+  }
+}
