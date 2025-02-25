@@ -146,14 +146,15 @@
         </div>
         
 
-        <!-- RIGHT SIDE (form) -->
+          <!-- RIGHT SIDE (form) -->
         <div class="contactus-right">
           <h2 class="contactus-title">Send us a message</h2>
-          <form class="contactus-form">
+          <form class="contactus-form" id="contactForm">
             <div class="contactus-form-group">
               <label for="contactusFirstName">First &amp; Last Name*</label>
               <input
                 type="text"
+                name="from_name"
                 id="contactusFirstName"
                 class="contactus-input"
                 placeholder="Your Name"
@@ -164,6 +165,7 @@
               <label for="contactusPhone">Phone number*</label>
               <input
                 type="tel"
+                name="phone"
                 id="contactusPhone"
                 class="contactus-input"
                 placeholder="(123) 456-7890"
@@ -174,6 +176,7 @@
               <label for="contactusEmail">Email address*</label>
               <input
                 type="email"
+                name="reply_to"
                 id="contactusEmail"
                 class="contactus-input"
                 placeholder="example@domain.com"
@@ -184,6 +187,7 @@
               <label for="contactusCompany">Company name (optional)</label>
               <input
                 type="text"
+                name="company"
                 id="contactusCompany"
                 class="contactus-input"
                 placeholder="Your Company"
@@ -192,6 +196,7 @@
             <div class="contactus-form-group">
               <label for="contactusMessage">Message*</label>
               <textarea
+                name="message"
                 id="contactusMessage"
                 class="contactus-input"
                 placeholder="Your message here"
@@ -202,6 +207,7 @@
             <button type="submit" class="contactus-button">Contact us now!</button>
           </form>
         </div>
+
       </div>
     </section>
 
@@ -222,5 +228,12 @@
   
   <!-- Link external script at bottom, so DOM is ready -->
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script>
+    (function(){
+        emailjs.init("DDd6toGn8ySWfA3kT"); // Replace with your EmailJS user/public key
+    })();
+  </script>
+
 </body>
 </html>

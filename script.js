@@ -377,3 +377,15 @@ document.addEventListener("keydown", (e) => {
     closeVerticalCarousel();
   }
 });
+
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // Prevent default form submission
+  emailjs.sendForm('service_lwekqz8', 'template_p632doy', this)
+    .then(function() {
+      alert('Message sent successfully!');
+      document.getElementById('contactForm').reset();
+    }, function(error) {
+      console.error('Failed to send message:', error);
+      alert('Failed to send message. Please try again later.');
+    });
+});
