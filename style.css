@@ -23,6 +23,37 @@ section {
   animation: fadeInOut 2s infinite; /* 2s cycle, repeats infinitely */
 }
 
+/* Preloader content wrapper for centering */
+#preloader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container for the loading bar */
+#loading-bar-container {
+  width: 200px;            /* Adjust width as needed */
+  height: 5px;             /* Height of the bar */
+  background: #ccc;        /* Optional: a light background behind the bar */
+  margin-top: 15px;        /* Spacing below the logo */
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* The loading bar */
+#loading-bar {
+  height: 100%;
+  width: 0;
+  background: #4274bb;
+  animation: loading 2s linear infinite;
+}
+
+/* Keyframes for the loading animation */
+@keyframes loading {
+  0% { width: 0; }
+  50% { width: 100%; }
+  100% { width: 0; }
+}
 /* Hide scrollbar in Chrome, Safari and Opera */
 ::-webkit-scrollbar {
   display: none;
