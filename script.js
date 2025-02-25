@@ -1,11 +1,13 @@
   // When the entire page (images, etc.) finishes loading
-  window.addEventListener('load', function() {
-    // Hide the preloader overlay
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-      preloader.style.display = 'none';
-    }
-  });
+  // 1) Preloader: Wait for the background video to be ready
+const bgVideo = document.getElementById('bg-video');
+bgVideo.addEventListener('canplaythrough', function() {
+  // Hide the preloader only when the video is ready to play through
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    preloader.style.display = 'none';
+  }
+});
   
 /****************************************************
  * 1) Slides Data
