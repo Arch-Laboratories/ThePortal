@@ -79,6 +79,9 @@ const verticalCarouselWrapper = document.getElementById("verticalCarouselWrapper
 const verticalCarousel = document.getElementById("verticalCarousel");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
+const verticalCloseDelay = 300;    // ms to wait for the vertical carousel to close
+const horizontalCenterDelay = 500; // ms to wait for horizontal centering animation
+const verticalOpenDelay = 0;       // additional delay before opening new vertical carousel (optional)
 
 let currentSlideIndex = null;
 
@@ -137,77 +140,109 @@ function createHorizontalSlides() {
  ****************************************************/
 function openVerticalCarousel(slideIndex, clickedSlideDiv) {
   currentSlideIndex = slideIndex;
-  document.body.style.overflow = "hidden";
-
-  // Clear old vertical slides
-  verticalCarousel.querySelectorAll(".vertical-slide").forEach(vs => vs.remove());
-
-  // Populate new vertical slides
-  slidesData[slideIndex].verticalImages.forEach(imageUrl => {
-    const vs = document.createElement("div");
-    vs.classList.add("vertical-slide");
-
-    const spinner = document.createElement("div");
-    spinner.classList.add("spinner");
-    vs.appendChild(spinner);
-
-    const img = document.createElement("img");
-    img.src = imageUrl;
-    img.addEventListener("load", () => {
-      spinner.style.display = "none";
-      img.classList.add("loaded");
-    });
-
-    vs.appendChild(img);
-    verticalCarousel.appendChild(vs);
-  });
-
-  // Position the wrapper so the top aligns with the clicked slide
-  const rect = clickedSlideDiv.getBoundingClientRect();
-  verticalCarouselWrapper.style.position = "fixed";
-  verticalCarouselWrapper.style.left = rect.left + "px";
-  verticalCarouselWrapper.style.width = rect.width + "px";
-  // From that slide's top to bottom of screen
-  verticalCarouselWrapper.style.top = rect.top + "px";
-  verticalCarouselWrapper.style.height = `calc(100vh - ${rect.top}px)`;
-
-  verticalCarouselWrapper.classList.remove("hidden");
-  verticalCarouselWrapper.style.display = "flex";
-
-  // If already open, reset
-  if (!verticalCarouselWrapper.classList.contains("hidden")) {
-    verticalCarousel.style.transition = "none";
-    verticalCarousel.classList.remove("open");
-    verticalCarousel.getBoundingClientRect(); // reflow
-    verticalCarousel.style.transition = "";
-  }
-
-  verticalCarouselWrapper.style.pointerEvents = "auto";
-
-  requestAnimationFrame(() => {
-    verticalCarousel.classList.add("open");
+  
+  // Step 1: Close any open vertical carousel, then...
+  closeVerticalCarouselPromise().then(() => {
+    // Step 2: Smoothly center the clicked slide relative to the viewport
+    const slideWidth = clickedSlideDiv.offsetWidth;
+    const targetScrollLeft = clickedSlideDiv.offsetLeft - (window.innerWidth / 2 - slideWidth / 2);
+  
+    horizontalCarousel.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+    
+    // Wait for horizontal scrolling to complete (adjust timing as needed)
+    setTimeout(() => {
+      // Step 3: Populate and open the new vertical carousel
+      document.body.style.overflow = "hidden";
+  
+      // Clear old vertical slides
+      verticalCarousel.querySelectorAll(".vertical-slide").forEach(vs => vs.remove());
+  
+      // Populate new vertical slides for the selected horizontal slide
+      slidesData[slideIndex].verticalImages.forEach(imageUrl => {
+        const vs = document.createElement("div");
+        vs.classList.add("vertical-slide");
+  
+        const spinner = document.createElement("div");
+        spinner.classList.add("spinner");
+        vs.appendChild(spinner);
+  
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.addEventListener("load", () => {
+          spinner.style.display = "none";
+          img.classList.add("loaded");
+        });
+  
+        vs.appendChild(img);
+        verticalCarousel.appendChild(vs);
+      });
+  
+      // Get the clicked slide's bounding rectangle for vertical positioning
+      const rect = clickedSlideDiv.getBoundingClientRect();
+      verticalCarouselWrapper.style.position = "fixed";
+      verticalCarouselWrapper.style.left = rect.left + "px";
+      verticalCarouselWrapper.style.width = rect.width + "px";
+      verticalCarouselWrapper.style.top = rect.top + "px";
+      verticalCarouselWrapper.style.height = `calc(100vh - ${rect.top}px)`;
+  
+      verticalCarouselWrapper.classList.remove("hidden");
+      verticalCarouselWrapper.style.display = "flex";
+  
+      // Reset vertical carousel animation if needed
+      verticalCarousel.style.transition = "none";
+      verticalCarousel.classList.remove("open");
+      verticalCarousel.getBoundingClientRect(); // Force reflow
+      verticalCarousel.style.transition = "";
+  
+      verticalCarouselWrapper.style.pointerEvents = "auto";
+  
+      // Optional additional delay before opening vertical carousel
+      setTimeout(() => {
+        verticalCarousel.classList.add("open");
+      }, verticalOpenDelay);
+  
+    }, horizontalCenterDelay);
   });
 }
+
+
 
 /****************************************************
  * 5) Close Vertical Carousel
  ****************************************************/
+function closeVerticalCarouselPromise() {
+  return new Promise(resolve => {
+    // Only if the vertical carousel is open
+    if (!verticalCarouselWrapper.classList.contains("hidden")) {
+      verticalCarousel.classList.remove("open");
+      verticalCarouselWrapper.style.pointerEvents = "none";
+      // Wait for the closing animation to complete
+      setTimeout(() => {
+        verticalCarouselWrapper.classList.add("hidden");
+        document.body.style.overflow = "auto";
+        resolve();
+      }, verticalCloseDelay);
+    } else {
+      resolve();
+    }
+  });
+}
+
 function closeVerticalCarousel() {
   verticalCarousel.classList.remove("open");
   verticalCarouselWrapper.style.pointerEvents = "none";
-
   setTimeout(() => {
     verticalCarouselWrapper.classList.add("hidden");
     document.body.style.overflow = "auto";
     currentSlideIndex = null;
-  }, 500);
+  }, 500); // Adjust delay to match your vertical carousel closing animation timing
 }
 
 /****************************************************
  * 6) Click outside -> close vertical carousel
  ****************************************************/
 document.addEventListener("click", (e) => {
-  if (verticalCarouselWrapper.classList.contains("hidden")) return;
+  if (verticalCarouselWrapper.classList.contains("hidden")) return; // already closed
 
   const clickedInsideHorizontal = horizontalCarousel.contains(e.target);
   const clickedInsideVertical = verticalCarousel.contains(e.target);
@@ -217,13 +252,28 @@ document.addEventListener("click", (e) => {
   }
 });
 
+// Additional keydown listener for arrow keys on smaller screens
+document.addEventListener("keydown", (e) => {
+  if (window.innerWidth < 769 && !verticalCarouselWrapper.classList.contains("hidden")) {
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      closeVerticalCarousel();
+    }
+  }
+});
+
 /****************************************************
  * 7) Horizontal Carousel Nav
  ****************************************************/
 prevBtn.addEventListener("click", () => {
+  if (!verticalCarouselWrapper.classList.contains("hidden")) {
+    closeVerticalCarousel();
+  }
   horizontalCarousel.scrollBy({ left: -300, behavior: "smooth" });
 });
 nextBtn.addEventListener("click", () => {
+  if (!verticalCarouselWrapper.classList.contains("hidden")) {
+    closeVerticalCarousel();
+  }
   horizontalCarousel.scrollBy({ left: 300, behavior: "smooth" });
 });
 
