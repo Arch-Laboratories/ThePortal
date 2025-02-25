@@ -370,3 +370,10 @@ function adjustSlideVisibility(clickedSlideDiv) {
     return Promise.resolve();
   }
 }
+
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !verticalCarouselWrapper.classList.contains("hidden")) {
+    closeVerticalCarousel();
+  }
+});

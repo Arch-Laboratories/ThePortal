@@ -1,3 +1,7 @@
+section {
+  scroll-margin-top: 80px;
+}
+
 /* Preloader overlay covers entire viewport */
 #preloader {
   position: fixed;
@@ -787,17 +791,21 @@ display: inline-block;
 
 .contactus-info-item {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: center; /* Vertically center icon & text */
+  gap: 1rem;           /* Spacing between icon and text block */
+  margin-bottom: 1rem; /* Optional spacing between rows */
 }
 
 .contactus-icon {
-  width: 40px;          /* Adjust size as needed */
-  height: 40px;         /* Ensure a square shape */
-  object-fit: contain;  /* Keep aspect ratio without stretching */
-  margin-right: 1rem;   /* Space between icon and text */
+  width: 32px;          /* Adjust as needed */
+  height: 32px;         /* Ensure a square shape */
+  object-fit: contain;  /* Keep aspect ratio without stretching the icon */
+  display: inline-block; /* Helps keep them consistent in flex layouts */
+}
+
+#callIcon {
+  width: 22px;          /* Adjust as needed */
+  height: 22px;         /* Ensure a square shape */
 }
 
 .contactus-label {
