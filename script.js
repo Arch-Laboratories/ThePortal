@@ -1,4 +1,48 @@
-  // When the entire page (images, etc.) finishes loading
+document.addEventListener("DOMContentLoaded", function() {
+  // Get all image elements on the page
+  const allImages = document.images;
+  const totalImages = allImages.length;
+  let imagesLoaded = 0;
+  const loadingBar = document.getElementById('loading-bar');
+
+  // If no images, hide preloader immediately
+  if (totalImages === 0) {
+    hidePreloader();
+  }
+
+  // Function to update the loading bar
+  function imageLoaded() {
+    imagesLoaded++;
+    const percent = Math.round((imagesLoaded / totalImages) * 100);
+    loadingBar.style.width = percent + "%";
+
+    // Once all images are loaded, hide the preloader
+    if (imagesLoaded === totalImages) {
+      // Optionally, add a slight delay to let the bar reach 100%
+      setTimeout(hidePreloader, 300);
+    }
+  }
+
+  // Attach load/error events to each image
+  for (let i = 0; i < totalImages; i++) {
+    // If the image is already cached/complete, count it immediately
+    if (allImages[i].complete) {
+      imageLoaded();
+    } else {
+      allImages[i].addEventListener('load', imageLoaded, false);
+      allImages[i].addEventListener('error', imageLoaded, false);
+    }
+  }
+
+  function hidePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.style.display = 'none';
+    }
+  }
+});
+
+// When the entire page (images, etc.) finishes loading
   // 1) Preloader: Wait for the background video to be ready
 const bgVideo = document.getElementById('bg-video');
 bgVideo.addEventListener('canplaythrough', function() {

@@ -34,7 +34,7 @@ section {
 #loading-bar-container {
   width: 200px;            /* Adjust width as needed */
   height: 5px;             /* Height of the bar */
-  background: #ccc;        /* Optional: a light background behind the bar */
+  background: #000000;        /* Optional: a light background behind the bar */
   margin-top: 15px;        /* Spacing below the logo */
   overflow: hidden;
   border-radius: 3px;
