@@ -8,7 +8,7 @@ This repository contains the codebase for the portfolio website of **The Portal*
 
 Below is a quick preview of the website in action:
 
-![Website Demo](assets/demo)
+![Website Demo](assets/demo.gif)
 
 ## License
 
